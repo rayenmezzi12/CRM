@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../core/auth/auth.service';
+import { AuthService, AuthResponse } from '../../../core/auth/auth.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -105,7 +105,7 @@ export class LoginComponent {
       this.isLoading = true;
       this.errorMessage = '';
       this.authService.login(this.loginForm.value).subscribe({
-        next: (res) => {
+        next: (res: AuthResponse) => {
           this.isLoading = false;
           if (res.mustChangePassword) {
             // handle change password flow later, for now just go to profile or dashboard
@@ -113,7 +113,7 @@ export class LoginComponent {
           }
           this.router.navigate(['/']); // go to home or dashboard
         },
-        error: (err) => {
+        error: (err: unknown) => {
           this.isLoading = false;
           this.errorMessage = 'Identifiants invalides';
           console.error(err);

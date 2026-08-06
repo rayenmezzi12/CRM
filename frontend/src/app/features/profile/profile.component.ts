@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EmployeeService, Employee } from '../../employees/employee.service';
+import { EmployeeService, Employee } from '../employees/employee.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
@@ -85,10 +85,10 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.employeeService.getMyProfile().subscribe({
-      next: (data) => {
+      next: (data: Employee) => {
         this.profile = data;
       },
-      error: (err) => {
+      error: (err: unknown) => {
         console.error('Erreur lors du chargement du profil', err);
       }
     });
