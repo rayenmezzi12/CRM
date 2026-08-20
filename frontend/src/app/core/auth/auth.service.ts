@@ -15,7 +15,6 @@ export interface AuthResponse {
 export class AuthService {
   private apiUrl = '/api/auth';
   
-  // Store token in memory, not in localStorage as requested
   private tokenSignal = signal<string | null>(null);
   private currentUserSignal = signal<Omit<AuthResponse, 'accessToken'> | null>(null);
 
@@ -30,6 +29,17 @@ export class AuthService {
           role: response.role,
           mustChangePassword: response.mustChangePassword
         });
+      })
+    );
+  }
+
+  changePassword(passwords: { oldPassword: string; newPassword: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/change-password`, passwords).pipe(
+      tap(() => {
+        const user = this.currentUserSignal();
+        if (user) {
+          this.currentUserSignal.set({ ...user, mustChangePassword: false });
+        }
       })
     );
   }

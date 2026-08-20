@@ -108,10 +108,10 @@ export class LoginComponent {
         next: (res: AuthResponse) => {
           this.isLoading = false;
           if (res.mustChangePassword) {
-            // handle change password flow later, for now just go to profile or dashboard
-            console.warn('User must change password');
+            this.router.navigate(['/change-password']);
+          } else {
+            this.router.navigate(['/']);
           }
-          this.router.navigate(['/']); // go to home or dashboard
         },
         error: (err: unknown) => {
           this.isLoading = false;

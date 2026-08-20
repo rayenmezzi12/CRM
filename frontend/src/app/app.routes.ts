@@ -7,6 +7,11 @@ import { roleGuard } from './core/guards/role.guard';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
+    path: 'change-password',
+    loadComponent: () => import('./features/auth/change-password/change-password.component').then(m => m.ChangePasswordComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: '',
     component: LayoutComponent,
     canActivate: [authGuard],
@@ -33,6 +38,43 @@ export const routes: Routes = [
             loadComponent: () => import('./features/employees/employee-form/employee-form.component').then(m => m.EmployeeFormComponent)
           }
         ]
+      },
+      {
+        path: 'clients',
+        canActivate: [roleGuard],
+        data: { expectedRoles: ['ROLE_SUPER_ADMIN', 'ROLE_ADMIN'] },
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./features/clients/client-list/client-list.component').then(m => m.ClientListComponent)
+          },
+          {
+            path: 'new',
+            loadComponent: () => import('./features/clients/client-form/client-form.component').then(m => m.ClientFormComponent)
+          },
+          {
+            path: ':id/edit',
+            loadComponent: () => import('./features/clients/client-form/client-form.component').then(m => m.ClientFormComponent)
+          }
+        ]
+      },
+      {
+        path: 'users',
+        canActivate: [roleGuard],
+        data: { expectedRoles: ['ROLE_SUPER_ADMIN'] },
+        loadComponent: () => import('./features/admin/user-management/user-list.component').then(m => m.UserListComponent)
+      },
+      {
+        path: 'system-config',
+        canActivate: [roleGuard],
+        data: { expectedRoles: ['ROLE_SUPER_ADMIN'] },
+        loadComponent: () => import('./features/admin/system/system-config.component').then(m => m.SystemConfigComponent)
+      },
+      {
+        path: 'monitoring',
+        canActivate: [roleGuard],
+        data: { expectedRoles: ['ROLE_SUPER_ADMIN'] },
+        loadComponent: () => import('./features/admin/system/monitoring.component').then(m => m.MonitoringComponent)
       },
       { path: '', redirectTo: 'profile', pathMatch: 'full' }
     ]
